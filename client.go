@@ -27,6 +27,13 @@ type Client struct {
 	instanceAdminClient *instanceAdmin.InstanceAdminClient
 }
 
+// ClientConfig represents extra parameters that can be passed while creating a spanner client
+type ClientConfig struct {
+	T *testing.T
+	// ExtraStatments extra statements upon database creation
+	ExtraStatments []string
+}
+
 // GRPC fetches the connection to the underlying Spanner gRPC server.
 func (r *Client) GRPC() *grpc.ClientConn {
 	r.t.Helper()
@@ -68,10 +75,10 @@ func (r *Client) Close(ctx context.Context) {
 	r.instance.Close(ctx)
 }
 
-func NewClient(ctx context.Context, t *testing.T) (*Client, error) {
-	t.Helper()
+func NewClient(ctx context.Context, config ClientConfig) (*Client, error) {
+	config.T.Helper()
 
-	instance, err := NewInstance(ctx, t)
+	instance, err := NewInstance(ctx, config.T)
 
 	if err != nil {
 		return nil, fmt.Errorf("creating the instance: %v", err)
@@ -134,6 +141,7 @@ func NewClient(ctx context.Context, t *testing.T) (*Client, error) {
 	op, err := adminClient.CreateDatabase(ctx, &adminpb.CreateDatabaseRequest{
 		Parent:          "projects/" + ProjectID + "/instances/" + InstanceID,
 		CreateStatement: "CREATE DATABASE `" + DatabaseID + "`",
+		ExtraStatements: config.ExtraStatments,
 	})
 
 	if err != nil {
@@ -153,7 +161,7 @@ func NewClient(ctx context.Context, t *testing.T) (*Client, error) {
 	}
 
 	client := &Client{
-		t:                   t,
+		t:                   config.T,
 		instance:            instance,
 		grpc:                conn,
 		client:              spannerClient,
