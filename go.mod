@@ -1,4 +1,4 @@
-module github.com/tavvfiq/go-mock-spanner
+module github.com/arhea/go-mock-spanner
 
 go 1.21.4
 

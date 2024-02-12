@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
+	mockspanner "github.com/arhea/go-mock-spanner"
 	"github.com/stretchr/testify/assert"
-	mockspanner "github.com/tavvfiq/go-mock-spanner"
 )
 
 func TestClient(t *testing.T) {
@@ -13,7 +13,11 @@ func TestClient(t *testing.T) {
 
 	ctx := context.Background()
 
-	mock, err := mockspanner.NewClient(ctx, t)
+	config := mockspanner.ClientConfig{
+		T: t,
+	}
+
+	mock, err := mockspanner.NewClient(ctx, config)
 
 	if err != nil {
 		t.Fatalf("creating the client: %v", err)
