@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	mockspanner "github.com/arhea/go-mock-spanner"
+	mockspanner "github.com/tavvfiq/go-mock-spanner"
 )
 
 func TestInstance(t *testing.T) {

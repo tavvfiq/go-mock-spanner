@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	mockspanner "github.com/arhea/go-mock-spanner"
 	"github.com/stretchr/testify/assert"
+	mockspanner "github.com/tavvfiq/go-mock-spanner"
 )
 
 func TestClient(t *testing.T) {
